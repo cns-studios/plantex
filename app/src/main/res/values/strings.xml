@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Plantex</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="modify">Modify</string>
+    <string name="water_now">Water Now</string>
+    <string name="connected">Plantex Connected</string>
+    <string name="disconnected">Plantex Disconnected</string>
+    <string name="connecting">Connecting...</string>
+    <string name="next_watering">Next Watering</string>
+    <string name="set_frequency">Set Watering Frequency</string>
+</resources>

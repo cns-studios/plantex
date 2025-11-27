@@ -1,0 +1,82 @@
+// app/src/main/java/com/cns/plantex/ui/theme/Color.kt
+package com.cns.plantex.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Primary Green Palette (Plant themed)
+val Green10 = Color(0xFF002106)
+val Green20 = Color(0xFF00390E)
+val Green30 = Color(0xFF005317)
+val Green40 = Color(0xFF006E22)
+val Green50 = Color(0xFF008A2D)
+val Green60 = Color(0xFF25A649)
+val Green70 = Color(0xFF4CC36A)
+val Green80 = Color(0xFF6FE085)
+val Green90 = Color(0xFF8DFEA0)
+val Green95 = Color(0xFFC7FFD0)
+val Green99 = Color(0xFFF5FFF3)
+
+// Secondary Teal Palette
+val Teal10 = Color(0xFF00201F)
+val Teal20 = Color(0xFF003735)
+val Teal30 = Color(0xFF00504D)
+val Teal40 = Color(0xFF006A66)
+val Teal50 = Color(0xFF008581)
+val Teal60 = Color(0xFF00A19C)
+val Teal70 = Color(0xFF2DBDB8)
+val Teal80 = Color(0xFF50DAD4)
+val Teal90 = Color(0xFF70F7F0)
+val Teal95 = Color(0xFFB3FFFA)
+val Teal99 = Color(0xFFF2FFFE)
+
+// Tertiary Blue Palette
+val Blue10 = Color(0xFF001F28)
+val Blue20 = Color(0xFF003545)
+val Blue30 = Color(0xFF004D63)
+val Blue40 = Color(0xFF006782)
+val Blue50 = Color(0xFF0081A3)
+val Blue60 = Color(0xFF009CC4)
+val Blue70 = Color(0xFF3AB8E0)
+val Blue80 = Color(0xFF64D4FC)
+val Blue90 = Color(0xFFBEE9FF)
+val Blue95 = Color(0xFFDFF4FF)
+val Blue99 = Color(0xFFF6FBFF)
+
+// Error Red Palette
+val Red10 = Color(0xFF410002)
+val Red20 = Color(0xFF690005)
+val Red30 = Color(0xFF93000A)
+val Red40 = Color(0xFFBA1A1A)
+val Red50 = Color(0xFFDE3730)
+val Red60 = Color(0xFFFF5449)
+val Red70 = Color(0xFFFF897D)
+val Red80 = Color(0xFFFFB4AB)
+val Red90 = Color(0xFFFFDAD6)
+val Red95 = Color(0xFFFFEDEB)
+val Red99 = Color(0xFFFFFBFF)
+
+// Neutral Palette
+val Neutral10 = Color(0xFF1A1C19)
+val Neutral20 = Color(0xFF2F312D)
+val Neutral30 = Color(0xFF454743)
+val Neutral40 = Color(0xFF5D5F5A)
+val Neutral50 = Color(0xFF767873)
+val Neutral60 = Color(0xFF8F918C)
+val Neutral70 = Color(0xFFAAACA7)
+val Neutral80 = Color(0xFFC6C7C2)
+val Neutral90 = Color(0xFFE2E3DE)
+val Neutral95 = Color(0xFFF0F1EC)
+val Neutral99 = Color(0xFFFCFDF7)
+
+// Neutral Variant Palette
+val NeutralVariant10 = Color(0xFF171D17)
+val NeutralVariant20 = Color(0xFF2C322B)
+val NeutralVariant30 = Color(0xFF424841)
+val NeutralVariant40 = Color(0xFF5A5F58)
+val NeutralVariant50 = Color(0xFF727870)
+val NeutralVariant60 = Color(0xFF8C9289)
+val NeutralVariant70 = Color(0xFFA6ACA4)
+val NeutralVariant80 = Color(0xFFC2C8BF)
+val NeutralVariant90 = Color(0xFFDEE4DA)
+val NeutralVariant95 = Color(0xFFECF2E8)
+val NeutralVariant99 = Color(0xFFF9FEF4)
