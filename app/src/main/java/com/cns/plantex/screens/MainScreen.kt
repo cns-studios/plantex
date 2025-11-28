@@ -196,11 +196,12 @@ fun MainScreen(
     if (showModifyDialog) {
         ModifyDeviceDialog(
             currentDeviceName = state.deviceName,
+            currentDeviceAddress = state.deviceAddress,
             currentWaterLevel = state.waterLevel,
             currentAutoWatering = state.autoWatering,
             onDismiss = { showModifyDialog = false },
-            onConfirm = { name, level, auto ->
-                viewModel.updateDeviceSettings(name, level, auto)
+            onConfirm = { name, address, level, auto ->
+                viewModel.updateDeviceSettings(name, address, level, auto)
                 showModifyDialog = false
             }
         )

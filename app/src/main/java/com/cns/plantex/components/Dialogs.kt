@@ -282,12 +282,14 @@ fun BluetoothDeviceSelectionDialog(
 @Composable
 fun ModifyDeviceDialog(
     currentDeviceName: String,
+    currentDeviceAddress: String,
     currentWaterLevel: Int,
     currentAutoWatering: Boolean,
     onDismiss: () -> Unit,
-    onConfirm: (String, Int, Boolean) -> Unit
+    onConfirm: (String, String, Int, Boolean) -> Unit
 ) {
     var deviceName by remember { mutableStateOf(currentDeviceName) }
+    var deviceAddress by remember { mutableStateOf(currentDeviceAddress) }
     var waterLevel by remember { mutableStateOf(currentWaterLevel.toFloat()) }
     var autoWatering by remember { mutableStateOf(currentAutoWatering) }
 
@@ -336,6 +338,21 @@ fun ModifyDeviceDialog(
                     label = { Text("Device Name") },
                     leadingIcon = {
                         Icon(Icons.Outlined.Bluetooth, null)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Device Address
+                OutlinedTextField(
+                    value = deviceAddress,
+                    onValueChange = { deviceAddress = it },
+                    label = { Text("MAC Address") },
+                    leadingIcon = {
+                        Icon(Icons.Outlined.SettingsEthernet, null)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -420,7 +437,7 @@ fun ModifyDeviceDialog(
 
                     Button(
                         onClick = {
-                            onConfirm(deviceName, waterLevel.toInt(), autoWatering)
+                            onConfirm(deviceName, deviceAddress, waterLevel.toInt(), autoWatering)
                         },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp)
