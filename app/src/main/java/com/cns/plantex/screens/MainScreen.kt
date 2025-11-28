@@ -28,6 +28,7 @@ fun MainScreen(
     var showFrequencyDialog by remember { mutableStateOf(false) }
     var showModifyDialog by remember { mutableStateOf(false) }
     var showConnectingDialog by remember { mutableStateOf(false) }
+    var showBluetoothDialog by remember { mutableStateOf(false) }
 
     // Show connecting dialog when connecting
     LaunchedEffect(state.isConnecting) {
@@ -96,7 +97,7 @@ fun MainScreen(
                     deviceName = state.deviceName,
                     waterLevel = state.waterLevel,
                     moistureLevel = state.moistureLevel,
-                    onConnect = { viewModel.connect() },
+                    onConnect = { showBluetoothDialog = true },
                     onDisconnect = { viewModel.disconnect() },
                     onModify = { showModifyDialog = true }
                 )
@@ -207,6 +208,18 @@ fun MainScreen(
         ConnectingDialog(
             progress = state.connectionProgress,
             onCancel = { viewModel.disconnect() }
+        )
+    }
+
+    if (showBluetoothDialog) {
+        BluetoothDeviceSelectionDialog(
+            devices = state.bluetoothDevices,
+            onDismiss = { showBluetoothDialog = false },
+            onScan = { viewModel.scanForDevices() },
+            onConnect = { device ->
+                viewModel.connect(device)
+                showBluetoothDialog = false
+            }
         )
     }
 }
