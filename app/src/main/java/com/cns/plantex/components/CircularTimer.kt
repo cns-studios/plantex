@@ -37,9 +37,16 @@ fun CircularTimer(
     modifier: Modifier = Modifier
 ) {
     val progress = if (totalSeconds > 0) remainingSeconds.toFloat() / totalSeconds.toFloat() else 0f
+    var animationTrigger by remember { mutableStateOf(false) }
+
+    LaunchedEffect(remainingSeconds) {
+        if (remainingSeconds == totalSeconds) {
+            animationTrigger = !animationTrigger
+        }
+    }
 
     val animatedProgress by animateFloatAsState(
-        targetValue = progress,
+        targetValue = if (animationTrigger) 1f else progress,
         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         label = "progress"
     )
