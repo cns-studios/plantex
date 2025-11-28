@@ -219,12 +219,8 @@ fun MainScreen(
             onDismiss = { showBluetoothDialog = false },
             onScan = { viewModel.scanForDevices() },
             onConnect = { device ->
-                scope.launch {
                     showBluetoothDialog = false
-                    // Short delay to allow the dialog to dismiss before showing the connection progress
-                    kotlinx.coroutines.delay(100)
                     viewModel.connect(device)
-                }
             }
         )
     }

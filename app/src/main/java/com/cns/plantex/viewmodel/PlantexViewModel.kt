@@ -24,7 +24,8 @@ data class PlantexState(
     val waterLevel: Int = 75, // percentage
     val moistureLevel: Int = 45, // percentage
     val autoWatering: Boolean = true,
-    val bluetoothDevices: List<String> = emptyList()
+    val bluetoothDevices: List<String> = emptyList(),
+    val isBluetoothDialogVisible: Boolean = false
 )
 
 class PlantexViewModel : ViewModel() {
