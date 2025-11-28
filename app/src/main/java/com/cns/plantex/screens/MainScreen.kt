@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,7 @@ fun MainScreen(
     viewModel: PlantexViewModel
 ) {
     val state by viewModel.state.collectAsState()
+    val scope = rememberCoroutineScope()
 
     var showFrequencyDialog by remember { mutableStateOf(false) }
     var showModifyDialog by remember { mutableStateOf(false) }
@@ -217,8 +219,12 @@ fun MainScreen(
             onDismiss = { showBluetoothDialog = false },
             onScan = { viewModel.scanForDevices() },
             onConnect = { device ->
-                showBluetoothDialog = false
-                viewModel.connect(device)
+                scope.launch {
+                    showBluetoothDialog = false
+                    // Short delay to allow the dialog to dismiss before showing the connection progress
+                    kotlinx.coroutines.delay(100)
+                    viewModel.connect(device)
+                }
             }
         )
     }
