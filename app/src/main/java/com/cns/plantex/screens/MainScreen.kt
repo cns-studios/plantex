@@ -217,8 +217,8 @@ fun MainScreen(
             onDismiss = { showBluetoothDialog = false },
             onScan = { viewModel.scanForDevices() },
             onConnect = { device ->
-                viewModel.connect(device)
                 showBluetoothDialog = false
+                viewModel.connect(device)
             }
         )
     }
