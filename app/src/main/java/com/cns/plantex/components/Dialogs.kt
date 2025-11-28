@@ -209,6 +209,75 @@ fun WateringFrequencyDialog(
     }
 }
 
+@Composable
+fun BluetoothDeviceSelectionDialog(
+    devices: List<String>,
+    onDismiss: () -> Unit,
+    onScan: () -> Unit,
+    onConnect: (String) -> Unit
+) {
+    var selectedDevice by remember { mutableStateOf<String?>(null) }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(28.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+            ) {
+                Text(
+                    text = "Select a Plantex Device",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                devices.forEach { device ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedDevice == device,
+                            onClick = { selectedDevice = device }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = device)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onScan) {
+                        Text("Scan")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { selectedDevice?.let { onConnect(it) } },
+                        enabled = selectedDevice != null
+                    ) {
+                        Text("Connect")
+                    }
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModifyDeviceDialog(

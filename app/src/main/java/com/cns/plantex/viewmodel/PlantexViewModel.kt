@@ -23,7 +23,8 @@ data class PlantexState(
     val lastWateredTime: Long = System.currentTimeMillis(),
     val waterLevel: Int = 75, // percentage
     val moistureLevel: Int = 45, // percentage
-    val autoWatering: Boolean = true
+    val autoWatering: Boolean = true,
+    val bluetoothDevices: List<String> = emptyList()
 )
 
 class PlantexViewModel : ViewModel() {
@@ -53,7 +54,7 @@ class PlantexViewModel : ViewModel() {
         }
     }
 
-    fun connect() {
+    fun connect(deviceName: String) {
         viewModelScope.launch {
             _state.update { it.copy(isConnecting = true, connectionProgress = 0f) }
 
@@ -67,7 +68,24 @@ class PlantexViewModel : ViewModel() {
                 it.copy(
                     isConnected = true,
                     isConnecting = false,
-                    connectionProgress = 1f
+                    connectionProgress = 1f,
+                    deviceName = deviceName
+                )
+            }
+        }
+    }
+
+    fun scanForDevices() {
+        viewModelScope.launch {
+            _state.update { it.copy(bluetoothDevices = emptyList()) }
+            delay(1000L)
+            _state.update {
+                it.copy(
+                    bluetoothDevices = listOf(
+                        "Plantex Alpha",
+                        "Plantex Beta",
+                        "Plantex Gamma"
+                    )
                 )
             }
         }
