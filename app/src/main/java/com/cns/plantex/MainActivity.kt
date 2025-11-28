@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
+import com.cns.plantex.data.PreferenceDataStore
 import com.cns.plantex.ui.screens.MainScreen
 import com.cns.plantex.ui.theme.PlantexTheme
 import com.cns.plantex.viewmodel.PlantexViewModel
+import com.cns.plantex.viewmodel.PlantexViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +26,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel: PlantexViewModel = viewModel()
+                    val dataStore = PreferenceDataStore(applicationContext)
+                    val viewModel: PlantexViewModel = viewModel(
+                        factory = PlantexViewModelFactory(dataStore, applicationContext)
+                    )
                     MainScreen(viewModel = viewModel)
                 }
             }

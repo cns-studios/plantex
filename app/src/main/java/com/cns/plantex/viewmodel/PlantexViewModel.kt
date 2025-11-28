@@ -1,21 +1,30 @@
 // app/src/main/java/com/cns/plantex/viewmodel/PlantexViewModel.kt
 package com.cns.plantex.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.cns.plantex.WateringWorker
+import com.cns.plantex.data.PreferenceDataStore
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 data class PlantexState(
     val isConnected: Boolean = false,
     val isConnecting: Boolean = false,
     val connectionProgress: Float = 0f,
     val deviceName: String = "Plantex Device",
+    val deviceAddress: String = "",
     val wateringIntervalMinutes: Int = 120, // 2 hours default
     val remainingTimeSeconds: Long = 7200, // 2 hours in seconds
     val totalTimeSeconds: Long = 7200,
@@ -28,7 +37,10 @@ data class PlantexState(
     val isBluetoothDialogVisible: Boolean = false
 )
 
-class PlantexViewModel : ViewModel() {
+class PlantexViewModel(
+    private val preferenceDataStore: PreferenceDataStore,
+    private val context: Context
+) : ViewModel() {
 
     private val _state = MutableStateFlow(PlantexState())
     val state: StateFlow<PlantexState> = _state.asStateFlow()
@@ -36,7 +48,24 @@ class PlantexViewModel : ViewModel() {
     private var timerJob: Job? = null
 
     init {
+        loadSettings()
         startTimer()
+    }
+
+    private fun loadSettings() {
+        viewModelScope.launch {
+            val savedInterval = preferenceDataStore.getWateringInterval().firstOrNull()
+            if (savedInterval != null) {
+                setWateringInterval(savedInterval)
+            }
+
+            val deviceName = preferenceDataStore.getDeviceName().firstOrNull()
+            val deviceAddress = preferenceDataStore.getDeviceAddress().firstOrNull()
+            if (deviceName != null && deviceAddress != null) {
+                _state.update { it.copy(deviceName = deviceName, deviceAddress = deviceAddress) }
+                connect(deviceName)
+            }
+        }
     }
 
     private fun startTimer() {
@@ -50,6 +79,8 @@ class PlantexViewModel : ViewModel() {
                             remainingTimeSeconds = currentState.remainingTimeSeconds - 1
                         )
                     }
+                } else if (_state.value.isConnected && _state.value.remainingTimeSeconds <= 0) {
+                    resetTimer()
                 }
             }
         }
@@ -65,12 +96,17 @@ class PlantexViewModel : ViewModel() {
                 _state.update { it.copy(connectionProgress = i / 10f) }
             }
 
+            // For this mock, we'll use a fake address
+            val deviceAddress = "00:11:22:33:FF:EE"
+            preferenceDataStore.saveDevice(deviceName, deviceAddress)
+
             _state.update {
                 it.copy(
                     isConnected = true,
                     isConnecting = false,
                     connectionProgress = 1f,
-                    deviceName = deviceName
+                    deviceName = deviceName,
+                    deviceAddress = deviceAddress
                 )
             }
         }
@@ -103,14 +139,30 @@ class PlantexViewModel : ViewModel() {
     }
 
     fun setWateringInterval(minutes: Int) {
-        val totalSeconds = minutes * 60L
-        _state.update {
-            it.copy(
-                wateringIntervalMinutes = minutes,
-                totalTimeSeconds = totalSeconds,
-                remainingTimeSeconds = totalSeconds
-            )
+        viewModelScope.launch {
+            preferenceDataStore.saveWateringInterval(minutes)
+            val totalSeconds = minutes * 60L
+            _state.update {
+                it.copy(
+                    wateringIntervalMinutes = minutes,
+                    totalTimeSeconds = totalSeconds,
+                    remainingTimeSeconds = totalSeconds
+                )
+            }
+            scheduleWateringWorker(minutes.toLong())
         }
+    }
+
+    private fun scheduleWateringWorker(intervalMinutes: Long) {
+        val workRequest = PeriodicWorkRequestBuilder<WateringWorker>(
+            intervalMinutes, TimeUnit.MINUTES
+        ).build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "watering_worker",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
     }
 
     fun waterNow() {
